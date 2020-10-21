@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-int fact(int x){
+int fact1(int x){
     int res=1;
     while(x){
         res *= x;
@@ -10,6 +10,6 @@ int fact(int x){
     return res;
 }
 int main(){
-    cout<<fact(5)<<endl;
+    cout<<fact1(5)<<endl;
     return 0;
 }

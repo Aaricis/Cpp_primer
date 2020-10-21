@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-int fact(int x){
+int fact2(int x){
     int res=1;
     while(x){
         res *= x;
@@ -12,6 +12,6 @@ int fact(int x){
 int main(){
     int val;
     cin>>val;
-    cout<<fact(val)<<endl;
+    cout<<fact2(val)<<endl;
     return 0;
 }

@@ -1,10 +1,10 @@
 #include<iostream>
 using namespace std;
 
-void func(int x){
+void func3(int x){
     cout<<abs(x)<<endl;
 }
 int main(){
-    func(-1);
+    func3(-1);
     return 0;
 }
