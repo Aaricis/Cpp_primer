@@ -1,23 +1,13 @@
-#ifndef SALES_DATA_H
-#define SALES_DATA_H
-
 #include<iostream>
-#include<string>
 using namespace std;
 
-class Sales_data;
+struct Sales_data;
 istream& read(istream &is, Sales_data &sd);
-class Sales_data{
-friend Sales_data add(const Sales_data &lhs, const Sales_data &rhs);
-friend istream &read(istream &is, Sales_data &sd);
-friend ostream &print(ostream &os, const Sales_data &sd);
-
-private:
-    string bookNo = "";
+struct Sales_data{
+    std::string bookNo = "";
     unsigned units_sold = {0};
     double revenue{0.0};
 
-public:
     //Sales_data() = default;
     Sales_data():units_sold(0), revenue(0.0){}
     Sales_data(const string &s): bookNo(s) {}
@@ -69,4 +59,25 @@ Sales_data add(const Sales_data &lhs, const Sales_data &rhs){
     sum.combine(rhs);
     return sum;
 }
-#endif
+
+int main(){
+    Sales_data total(cin);
+    if(cin){
+        while(true){
+            Sales_data trans(cin);
+            if(!cin) break;
+            if(total.isbn()==trans.isbn()){
+                total.combine(trans);
+            }
+            else{
+                print(cout, total)<<endl;
+                total = trans;
+            }
+        }
+        print(cout, total)<<endl;
+    }
+    else{
+        cerr<<"No data?!"<<endl;
+    }    
+    return 0;
+}
