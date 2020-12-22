@@ -1,15 +1,17 @@
-#ifndef STRBLOB_H
-#define STRBLOB_H
+#ifndef STRBLOBPTR_H
+#define STRBLOBPTR_H
 
+#include<memory>
 #include<vector>
 #include<string>
-#include<memory>
-#include<initializer_list>
-#include<exception>
+#include<stdexcept>
+
 using namespace std;
 
-class StrBlob{
+class StrBlobPtr;
 
+class StrBlob{
+    friend class StrBlobPtr;
     public:
         typedef vector<string>::size_type size_type;
         StrBlob();
@@ -24,10 +26,13 @@ class StrBlob{
         const string& front() const;
         string& back();
         const string& back() const;
+        StrBlobPtr begin();
+        StrBlobPtr end();     
     
     private:
         shared_ptr<vector<string>> data;
         void check(size_type i, const string &msg) const;
+
         
 };
 
@@ -65,4 +70,46 @@ void StrBlob::pop_back(){
     data->pop_back();
 }
 
+class StrBlobPtr{
+    public:
+        StrBlobPtr():curr(0) { }
+        StrBlobPtr(StrBlob &a, size_t sz = 0):wptr(a.data), curr(sz) {}
+        string& deref() const;
+        StrBlobPtr& incr();
+    private:
+        shared_ptr<vector<string>> check(size_t, const string&) const;
+        weak_ptr<vector<string>> wptr;
+        size_t curr;
+};
+
+StrBlobPtr StrBlob::begin()
+{
+    return StrBlobPtr(*this);
+}
+StrBlobPtr StrBlob::end()
+{
+    auto ret=StrBlobPtr(*this,data->size());
+    return ret;
+}
+
+
+shared_ptr<vector<string>> StrBlobPtr::check(size_t i, const string &msg) const{
+    auto ret = wptr.lock();
+    if(!ret)
+        throw runtime_error("unbound StrBlobPtr");
+    if(i>=ret->size())
+        throw out_of_range(msg);
+    return ret;
+}
+
+string& StrBlobPtr::deref() const{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr];
+}
+
+StrBlobPtr& StrBlobPtr::incr(){
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;
+    return *this;
+}
 #endif

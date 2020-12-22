@@ -1,15 +1,17 @@
-#ifndef STRBLOB_H
-#define STRBLOB_H
+#ifndef CONSTSTRBLOBPTR_H
+#define CONSTSTRBLOBPTR_H
 
+#include<memory>
 #include<vector>
 #include<string>
-#include<memory>
-#include<initializer_list>
-#include<exception>
+#include<stdexcept>
+
 using namespace std;
 
-class StrBlob{
+class ConstStrBlobPtr;
 
+class StrBlob{
+    friend class ConstStrBlobPtr;
     public:
         typedef vector<string>::size_type size_type;
         StrBlob();
@@ -24,10 +26,13 @@ class StrBlob{
         const string& front() const;
         string& back();
         const string& back() const;
+        ConstStrBlobPtr begin() const;
+        ConstStrBlobPtr end() const;     
     
     private:
         shared_ptr<vector<string>> data;
         void check(size_type i, const string &msg) const;
+
         
 };
 
@@ -63,6 +68,49 @@ const string& StrBlob::back() const{
 void StrBlob::pop_back(){
     check(0, "pop_back on empty StrBlob");
     data->pop_back();
+}
+
+class ConstStrBlobPtr{
+    public:
+        ConstStrBlobPtr():curr(0) { }
+        ConstStrBlobPtr(const StrBlob &a, size_t sz = 0):wptr(a.data), curr(sz) {}
+        const string& deref() const;
+        ConstStrBlobPtr& incr();
+    private:
+        shared_ptr<vector<string>> check(size_t, const string&) const;
+        weak_ptr<vector<string>> wptr;
+        size_t curr;
+};
+
+ConstStrBlobPtr StrBlob::begin() const
+{
+    return ConstStrBlobPtr(*this);
+}
+ConstStrBlobPtr StrBlob::end() const
+{
+    auto ret=ConstStrBlobPtr(*this,data->size());
+    return ret;
+}
+
+
+shared_ptr<vector<string>> ConstStrBlobPtr::check(size_t i, const string &msg) const{
+    auto ret = wptr.lock();
+    if(!ret)
+        throw runtime_error("unbound ConstStrBlobPtr");
+    if(i>=ret->size())
+        throw out_of_range(msg);
+    return ret;
+}
+
+const string& ConstStrBlobPtr::deref() const{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr];
+}
+
+ConstStrBlobPtr& ConstStrBlobPtr::incr(){
+    check(curr, "increment past end of ConstStrBlobPtr");
+    ++curr;
+    return *this;
 }
 
 #endif
