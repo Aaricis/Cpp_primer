@@ -18,9 +18,14 @@ public:
     String(const char *cp):sz(strlen(cp)), p(alloc.allocate(sz)){
         uninitialized_copy(cp, cp+sz, p);
     }
-    String(const String& s):sz(s.sz), p(alloc.allocate(sz)){
+    /* String(const String& s):sz(s.sz), p(alloc.allocate(sz)){
         uninitialized_copy(s.p, s.p+sz, p);
-    }
+        cout<<"copy constructor"<<endl;
+    } */
+
+    String(const String &s):sz(s.sz), p(alloc.allocate(s.sz))
+	          { std::uninitialized_copy(s.p, s.p + sz , p); }
+
     String(size_t n, char c):sz(n), p(alloc.allocate(n)){
         uninitialized_fill_n(p, n, c);
     }
@@ -70,6 +75,7 @@ String& String::operator=(const String &rhs){
     
     p = newp;
     sz = rhs.sz;
+    cout<<"copy-assignment operator"<<endl;
 
     return *this;
 }
