@@ -1,6 +1,7 @@
 #include<iostream>
 #include<set>
 #include<string>
+#include<utility>
 using namespace std;
 
 class Folder;
@@ -11,13 +12,21 @@ class Message{
 public:
     explicit Message(const string &str=""):contents(str){}
     Message(const Message&);
+    //move constructor
+    Message(Message&&);
+
     Message& operator=(const Message&);
+    //move-assignment operator
+    Message& operator=(Message&&);
+
     ~Message();
     void save(Folder&);
     void remove(Folder&);
 
     void addFolder(Folder*);
     void remFolder(Folder*);
+
+    void move_Folders(Message*);
 private:
     string contents;
     set<Folder*> folders;
@@ -68,8 +77,21 @@ void Message::add_to_Folders(const Message &m){
     }
 }
 
+void Message::move_Folders(Message *m){
+    folders = std::move(m->folders);
+    for(auto f : folders){
+        f->remMsg(m);
+        f->addMsg(this);
+    }
+    m->folders.clear();
+}
+
 Message::Message(const Message &m):contents(m.contents), folders(m.folders){
     add_to_Folders(m);
+}
+
+Message::Message(Message &&m) : contents(std::move(m.contents)){
+    move_Folders(&m);
 }
 
 void Message::remove_from_Folders(){
@@ -87,6 +109,15 @@ Message& Message:: operator=(const Message &rhs){
     contents = rhs.contents;
     folders = rhs.folders;
     add_to_Folders(rhs);
+    return *this;
+}
+
+Message& Message::operator=(Message &&rhs){
+    if(this!=&rhs){
+        remove_from_Folders();
+        contents = std::move(rhs.contents);
+        move_Folders(&rhs);
+    }
     return *this;
 }
 

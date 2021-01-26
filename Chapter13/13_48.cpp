@@ -45,8 +45,8 @@ int main(){
     svec.push_back(s3);
     svec.push_back(s4);
     svec.push_back(s5);
-    svec.push_back(baz());
-    svec.push_back("good job");
+    svec.push_back(baz()); //avoid copy
+    svec.push_back("good job"); //avoid copy
 
     for (const auto &s : svec) {
         cout<<s.c_str()<< endl;

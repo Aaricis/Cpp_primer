@@ -13,7 +13,16 @@ public:
     StrVec(const StrVec&);
     StrVec(initializer_list<string>&);
 
+    //move constructor
+    StrVec(StrVec &&s) noexcept : elements(s.elements), first_free(s.first_free), cap(s.cap){
+        s.elements = s.first_free = s.cap = nullptr;
+    }
+
     StrVec &operator=(const StrVec&);
+
+    //move-assignment operator
+    StrVec &operator=(StrVec &&) noexcept;
+
     ~StrVec();
     void push_back(const string&);
 
@@ -85,6 +94,18 @@ StrVec &StrVec::operator=(const StrVec &rhs){
     free();
     elements = data.first;
     first_free = cap = data.second;
+    return *this;
+}
+
+StrVec &StrVec::operator=(StrVec &&rhs) noexcept{
+    if(this != &rhs){
+        free();
+        elements = rhs.elements;
+        first_free = rhs.first_free;
+        cap = rhs.cap;
+
+        rhs.elements = rhs.first_free = rhs.cap;
+    }
     return *this;
 }
 

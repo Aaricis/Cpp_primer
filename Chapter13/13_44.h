@@ -8,7 +8,13 @@ public:
     String() : String("") { }
     String(const char *);
     String(const String&);
+
+    //move constructor
+    String(String&&) noexcept;
+
     String& operator=(const String&);
+    //move-assignment operator
+    String& operator=(String&&) noexcept;
     ~String();
 
     const char *c_str() const { return elements; }
@@ -54,6 +60,11 @@ String::String(const String& rhs)
     std::cout << "copy constructor" << std::endl;
 }
 
+String::String(String&& s) noexcept : elements(s.elements), end(s.end){
+    s.elements = s.end = nullptr;
+    std::cout<<"move constructor"<<std::endl;
+}
+
 void String::free()
 {
     if (elements) {
@@ -74,5 +85,16 @@ String& String::operator = (const String &rhs)
     elements = newstr.first;
     end = newstr.second;
     std::cout << "copy-assignment" << std::endl;
+    return *this;
+}
+
+String& String::operator = (String &&rhs) noexcept{
+    if(this != &rhs){
+        free();
+        elements = rhs.elements;
+        end = rhs.end;
+        rhs.elements = rhs.end = nullptr;
+    }
+    std::cout<<"move-assignment"<<std::endl;
     return *this;
 }
