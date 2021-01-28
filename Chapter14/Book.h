@@ -29,6 +29,8 @@ bool operator!=(const Book&, const Book&);
 
 istream &operator>>(istream& is, Book& book){
     is>>book.author>>book.publisher>>book.type>>book.price;
+    if(!is)
+        book = Book(); //输入失败，对象被赋予默认值
     return is;
 }
 
