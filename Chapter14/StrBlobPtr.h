@@ -74,6 +74,10 @@ class StrBlobPtr{
 
     friend bool operator==(const StrBlobPtr&, const StrBlobPtr&);
     friend bool operator!=(const StrBlobPtr&, const StrBlobPtr&);
+    friend bool operator<(const StrBlobPtr&, const StrBlobPtr&);
+    friend bool operator>(const StrBlobPtr&, const StrBlobPtr&);
+    friend bool operator<=(const StrBlobPtr&, const StrBlobPtr&);
+    friend bool operator>=(const StrBlobPtr&, const StrBlobPtr&);
 
     public:
         StrBlobPtr():curr(0) { }
@@ -88,6 +92,10 @@ class StrBlobPtr{
 
 bool operator==(const StrBlobPtr&, const StrBlobPtr&);
 bool operator!=(const StrBlobPtr&, const StrBlobPtr&);
+bool operator<(const StrBlobPtr&, const StrBlobPtr&);
+bool operator>(const StrBlobPtr&, const StrBlobPtr&);
+bool operator<=(const StrBlobPtr&, const StrBlobPtr&);
+bool operator>=(const StrBlobPtr&, const StrBlobPtr&);
 
 StrBlobPtr StrBlob::begin()
 {
@@ -130,5 +138,36 @@ bool operator==(const StrBlobPtr& lhs, const StrBlobPtr& rhs){
 
 bool operator!=(const StrBlobPtr& u, const StrBlobPtr& v){
     return !(u==v);
+}
+
+bool operator<(const StrBlobPtr& lhs, const StrBlobPtr& rhs){
+    auto l = lhs.wptr.lock(), r = rhs.wptr.lock();
+    if(l==r){
+        if(!r) return false;
+        return lhs.curr<rhs.curr;
+    }
+    return false;
+}
+bool operator>(const StrBlobPtr& lhs, const StrBlobPtr& rhs){
+    auto l = lhs.wptr.lock(), r = rhs.wptr.lock();
+    if(l==r){
+        if(!r) return false;
+        return lhs.curr>rhs.curr;
+    }
+    return false;
+}
+bool operator<=(const StrBlobPtr& lhs, const StrBlobPtr& rhs){
+    auto l = lhs.wptr.lock(), r = rhs.wptr.lock();
+    if(l==r){
+        return (!r || lhs.curr<=rhs.curr);
+    }
+    return false;
+}
+bool operator>=(const StrBlobPtr& lhs, const StrBlobPtr& rhs){
+    auto l = lhs.wptr.lock(), r = rhs.wptr.lock();
+    if(l==r){
+        return (!r || lhs.curr>=rhs.curr);
+    }
+    return false;    
 }
 #endif

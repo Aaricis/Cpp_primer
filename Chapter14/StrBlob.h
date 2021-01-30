@@ -11,6 +11,11 @@ using namespace std;
 class StrBlob{
     friend bool operator==(const StrBlob&, const StrBlob&);
     friend bool operator!=(const StrBlob&, const StrBlob&);
+    friend bool operator<(const StrBlob&, const StrBlob&);
+    friend bool operator>(const StrBlob&, const StrBlob&);
+    friend bool operator<=(const StrBlob&, const StrBlob&);
+    friend bool operator>=(const StrBlob&, const StrBlob&);
+
 public:
     typedef vector<string>::size_type size_type;
     StrBlob();
@@ -26,6 +31,8 @@ public:
 
     string& back();
     const string& back() const;
+
+
 private:
     shared_ptr<vector<string>> data;
     void check(size_type i, const string &msg) const;    
@@ -33,6 +40,10 @@ private:
 
 bool operator==(const StrBlob&, const StrBlob&);
 bool operator!=(const StrBlob&, const StrBlob&);
+bool operator<(const StrBlob&, const StrBlob&);
+bool operator>(const StrBlob&, const StrBlob&);
+bool operator<=(const StrBlob&, const StrBlob&);
+bool operator>=(const StrBlob&, const StrBlob&);
 
 StrBlob::StrBlob(): data(make_shared<vector<string>>()) {}
 StrBlob::StrBlob(initializer_list<string> il): data(make_shared<vector<string>>(il)) {}
@@ -73,5 +84,21 @@ bool operator==(const StrBlob& u, const StrBlob& v){
 
 bool operator!=(const StrBlob& u, const StrBlob& v){
     return !(u==v);
+}
+
+bool operator<(const StrBlob& u, const StrBlob& v){
+    return *(u.data)<*(v.data);      
+}
+
+bool operator>(const StrBlob& u, const StrBlob& v){
+    return v<u;
+}
+
+bool operator<=(const StrBlob& u, const StrBlob& v){
+    return !(u>v);
+}
+
+bool operator>=(const StrBlob& u, const StrBlob& v){
+    return !(u<v);
 }
 #endif
