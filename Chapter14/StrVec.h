@@ -10,6 +10,10 @@ using namespace std;
 class StrVec{
     friend bool operator==(const StrVec&, const StrVec&);
     friend bool operator!=(const StrVec&, const StrVec&);
+    friend bool operator<(const StrVec&, const StrVec&);
+    friend bool operator>(const StrVec&, const StrVec&);
+    friend bool operator<=(const StrVec&, const StrVec&);
+    friend bool operator>=(const StrVec&, const StrVec&);
 public:
     StrVec():elements(nullptr), first_free(nullptr), cap(nullptr){}
     StrVec(const StrVec&);
@@ -57,6 +61,10 @@ private:
 
 bool operator==(const StrVec&, const StrVec&);
 bool operator!=(const StrVec&, const StrVec&);
+bool operator<(const StrVec&, const StrVec&);
+bool operator>(const StrVec&, const StrVec&);
+bool operator<=(const StrVec&, const StrVec&);
+bool operator>=(const StrVec&, const StrVec&);
 
 void StrVec::push_back(const string& s){
     chk_n_alloc();
@@ -172,5 +180,26 @@ bool operator==(const StrVec& lhs, const StrVec& rhs){
 }
 bool operator!=(const StrVec& lhs, const StrVec& rhs){
     return !(lhs==rhs);
+}
+
+bool operator<(const StrVec& s1, const StrVec& s2){
+    string *b1, *b2;
+    for(b1 = s1.elements, b2 = s2.elements; b1 != s1.first_free && b2 != s2.first_free; ++b1, ++b2){
+        if(*b1 < *b2) return true;
+        else if(*b1 > *b2) return false;
+    }    
+    if(b1==s1.first_free && b2<s2.first_free)
+        return true;
+    
+    return false;
+}
+bool operator>(const StrVec& s1, const StrVec& s2){
+    return !(s1<s2);
+}
+bool operator<=(const StrVec& s1, const StrVec& s2){
+    return !(s1>s2);
+}
+bool operator>=(const StrVec& s1, const StrVec& s2){
+    return !(s1<s2);
 }
 #endif
