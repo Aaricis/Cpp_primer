@@ -84,6 +84,23 @@ class StrBlobPtr{
         StrBlobPtr(StrBlob &a, size_t sz = 0):wptr(a.data), curr(sz) {}
         string& deref() const;
         StrBlobPtr& incr();
+
+        string& operator[](size_t n);
+        const string& operator[](size_t n) const;
+
+        StrBlobPtr& operator++();
+        StrBlobPtr& operator--();
+        StrBlobPtr operator++(int);
+        StrBlobPtr operator--(int);
+
+        StrBlobPtr& operator+=(size_t);
+        StrBlobPtr& operator-=(size_t);
+        StrBlobPtr operator+(size_t) const;
+        StrBlobPtr operator-(size_t) const;
+        
+        string& operator*() const;
+        string* operator->() const;
+
     private:
         shared_ptr<vector<string>> check(size_t, const string&) const;
         weak_ptr<vector<string>> wptr;
@@ -126,6 +143,71 @@ StrBlobPtr& StrBlobPtr::incr(){
     check(curr, "increment past end of StrBlobPtr");
     ++curr;
     return *this;
+}
+
+string& StrBlobPtr::operator[](size_t n){
+    return (*wptr.lock())[n];
+}
+
+const string& StrBlobPtr::operator[](size_t n) const{
+    return (*wptr.lock())[n];
+}
+
+StrBlobPtr& StrBlobPtr::operator++(){
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;
+    return *this;
+}
+
+StrBlobPtr& StrBlobPtr::operator--(){
+    --curr;
+    check(curr, "decrement past begin of StrBlobPtr");
+    return *this;
+}
+
+StrBlobPtr StrBlobPtr::operator++(int){
+    StrBlobPtr ret = *this;
+    ++*this;
+    return ret;
+}
+
+StrBlobPtr StrBlobPtr::operator--(int){
+    StrBlobPtr ret = *this;
+    --*this;
+    return ret;
+}
+
+StrBlobPtr& StrBlobPtr::operator+=(size_t n){
+    curr += n;
+    check(curr, "increment past end of StrBlobPtr");
+    return *this;
+}
+
+StrBlobPtr& StrBlobPtr::operator-=(size_t n){
+    curr -= n;
+    check(curr, "decrement past begin of StrBlobPtr");
+    return *this;
+}
+
+StrBlobPtr StrBlobPtr::operator+(size_t n) const{
+    StrBlobPtr ret = *this;
+    ret += n; 
+    return ret;
+}
+
+StrBlobPtr StrBlobPtr::operator-(size_t n) const{
+    StrBlobPtr ret = *this;
+    ret -= n;
+    return ret;
+}
+
+string& StrBlobPtr::operator*() const{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr];
+}
+
+string* StrBlobPtr::operator->() const{
+    return &this->operator*();
 }
 
 bool operator==(const StrBlobPtr& lhs, const StrBlobPtr& rhs){

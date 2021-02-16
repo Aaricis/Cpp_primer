@@ -16,6 +16,7 @@ public:
     Sales_data(istream &is);
 
     Sales_data& operator+=(const Sales_data&);
+    Sales_data& operator=(const string&);
     string isbn() const {return bookNo;}
 private:
     string bookNo;
@@ -41,6 +42,12 @@ Sales_data& Sales_data::operator+=(const Sales_data& item){
     revenue += item.revenue;
     return *this;
 }
+
+Sales_data& Sales_data::operator=(const string& isbn){
+    *this = Sales_data(isbn);
+    return *this;
+}
+
 istream& operator>>(istream& is, Sales_data& item){
     double price;
     is>>item.bookNo>>item.units_sold>>price;

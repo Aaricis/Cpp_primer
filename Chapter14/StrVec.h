@@ -25,6 +25,7 @@ public:
     }
 
     StrVec &operator=(const StrVec&);
+    StrVec &operator=(initializer_list<string>&);
 
     //move-assignment operator
     StrVec &operator=(StrVec &&) noexcept;
@@ -41,6 +42,14 @@ public:
     string *begin() const {return elements;}
     string *end() const {return first_free;}
     string& at(size_t pos) { return *(elements + pos); }
+
+    string& operator[](size_t n){
+        return elements[n];
+    }
+
+    const string& operator[](size_t n) const{
+        return elements[n];
+    }
 private:
     allocator<string> alloc;
 
@@ -122,6 +131,13 @@ StrVec &StrVec::operator=(StrVec &&rhs) noexcept{
     return *this;
 }
 
+StrVec &StrVec::operator=(initializer_list<string>& li){
+    auto data = alloc_n_copy(li.begin(), li.end());
+    free();
+    elements = data.first;
+    first_free = cap = data.second;
+    return *this;
+}
 void StrVec::reallocate(){
     auto newcapacity = size()? 2*size() : 1;
     auto newdata = alloc.allocate(newcapacity);

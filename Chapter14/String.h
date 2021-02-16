@@ -28,6 +28,13 @@ public:
     size_t size() const { return end - elements; }
     size_t length() const { return end - elements - 1; }
 
+    char& operator[](size_t n){
+        return elements[n];
+    }
+    const char& operator[](size_t n) const {
+        return elements[n];
+    }
+
 private:
     std::pair<char*, char*> alloc_n_copy(const char*, const char*);
     void range_initializer(const char*, const char*);

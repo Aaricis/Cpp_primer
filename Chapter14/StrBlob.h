@@ -32,6 +32,14 @@ public:
     string& back();
     const string& back() const;
 
+    string& operator[](size_type n){
+        return (*data)[n];
+    }
+
+    const string& operator[](size_type n) const{
+        return (*data)[n];
+    }
+
 
 private:
     shared_ptr<vector<string>> data;
