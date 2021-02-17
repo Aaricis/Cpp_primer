@@ -18,6 +18,8 @@ public:
     Sales_data& operator+=(const Sales_data&);
     Sales_data& operator=(const string&);
     string isbn() const {return bookNo;}
+    operator string() const{ return bookNo;}
+    operator double() const{return revenue;}
 private:
     string bookNo;
     unsigned units_sold = 0;

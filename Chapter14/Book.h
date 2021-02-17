@@ -15,6 +15,7 @@ public:
     Book(const string &_author, const string &_publisher, const string &_type, double _price): 
                         author(_author), publisher(_publisher), type(_type), price(_price){}
     Book(iostream& in){in>>*this;}
+    operator bool() const{return price>0;}
 private:
     string author = "";
     string publisher = "";
