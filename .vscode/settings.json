@@ -1,4 +1,10 @@
 {
     "code-runner.runInTerminal": true,
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "python.pythonPath": "E:\\Anaconda\\envs\\tf2\\python.exe",
+    "C_Cpp.dimInactiveRegions": false,
+    "files.associations": {
+        "sstream": "cpp",
+        "string": "cpp"
+    }
 }

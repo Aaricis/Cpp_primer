@@ -30,10 +30,11 @@ public:
     Bulk_quote(){
         cout<<"Bulk_quote: default constructor"<<endl;
     }
-    Bulk_quote(const string& book, double price, size_t qty, double disc):
+    /* Bulk_quote(const string& book, double price, size_t qty, double disc):
         Disc_quote(book, price, qty, disc){
             cout<<"Bulk_quote: 4 parameters constructor"<<endl;
-        }
+        } */
+    using Disc_quote::Disc_quote;
     
     Bulk_quote(const Bulk_quote& bq):Disc_quote(bq){
         cout<<"Bulk_quote: copy constructor"<<endl;

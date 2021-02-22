@@ -53,6 +53,14 @@ public:
     virtual ~Quote(){
         cout<<"Quote: destructor"<<endl;
     }
+
+    virtual Quote* clone() const &{
+        return new Quote(*this);
+    }
+
+    virtual Quote* clone() const &&{
+        return new Quote(std::move(*this));
+    }
 private:
     string bookNo;
 protected:
@@ -67,5 +75,7 @@ operator !=(const Quote& lhs, const Quote& rhs)
            &&
            lhs.price  != rhs.price;
 }
+
+
 
 #endif
