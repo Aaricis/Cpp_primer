@@ -1,0 +1,30 @@
+(a):
+WordQuery(const string&);
+Query(const string&);
+WordQuery(const string&);
+Query(const string&);
+WordQuery(const string&);
+Query(const string&);
+
+AndQuery(const Query &left, const Query &right);
+BinaryQuery(const Query &l, const Query &r, string s);
+Query(shared_ptr<Query_base> query);
+
+OrQuery(const Query &left, const Query &right);
+BinaryQuery(const Query &l, const Query &r, string s);
+Query(shared_ptr<Query_base> query);
+
+(b):
+1. query.rep()
+2. q->rep()
+3.OrQuery::rep() //其实就是BinaryQuery()::rep(), 因为OrQuery继承了BinaryQuery的rep()函数
+4.Query::rep()
+5.AndQuery::rep()
+6.Query::rep()
+
+(c)
+1.Query()::eval()
+2.OrQuery()::eval()
+3.AndQuery()::eval()
+4.WordQuery()::eval()
+
