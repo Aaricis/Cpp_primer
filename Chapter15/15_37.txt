@@ -1,0 +1,4 @@
+Query类封装了Query_base指针，实际查询通过Query_base实现。
+如果不使用Query,则使用Query的地方都要改成Query_base指针:
+创建单词查询时就必须创建WordQuery对象，而不是Query对象；
+重载的布尔运算符不能使用Query, 而要使用Query_base指针；
