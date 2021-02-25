@@ -6,13 +6,11 @@ Query(const string&);
 WordQuery(const string&);
 Query(const string&);
 
+BinaryQuery(const Query &l, const Query &r, string s);
 AndQuery(const Query &left, const Query &right);
-BinaryQuery(const Query &l, const Query &r, string s);
-Query(shared_ptr<Query_base> query);
 
-OrQuery(const Query &left, const Query &right);
 BinaryQuery(const Query &l, const Query &r, string s);
-Query(shared_ptr<Query_base> query);
+OrQuery(const Query &left, const Query &right);
 
 (b):
 1. query.rep()
