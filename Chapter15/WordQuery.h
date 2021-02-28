@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include"Query_base.h"
+#include"textquery.h"
 using namespace std;
 
 class WordQuery: public Query_base{

@@ -1,49 +1,80 @@
-#ifndef TEXTQUERY_H
-#define TEXTQUERY_H
-
+#include<iostream>
 #include<vector>
 #include<string>
-#include<fstream>
 #include<map>
 #include<set>
+#include<fstream>
 #include<memory>
 #include<sstream>
-#include"QueryResult.h"
+#include"ConstStrBlobPtr.h"
 using namespace std;
 
+class QueryResult;
 class TextQuery{
     public:
-        using line_no = vector<string>::size_type;
-        TextQuery(ifstream&);
-        QueryResult query(const string&) const;
-    
+        typedef vector<string>::size_type size_type;
+        TextQuery(ifstream& infile);
+        QueryResult query(const string&); 
+
     private:
-        shared_ptr<vector<string>> file;
-        map<string, shared_ptr<set<line_no>>> wm;
+        StrBlob text;
+        map<string, shared_ptr<set<size_type>>> mp;
 };
 
-TextQuery :: TextQuery(ifstream &is):file(new vector<string>){
-    string text;
-    while(getline(is, text)){
-        file->push_back(text);
-        int n = file->size()-1;
-        istringstream line(text);
+class QueryResult{
+    using ResultIter = set<TextQuery::size_type> :: iterator;
+    friend ostream& print(ostream&, const QueryResult&);
+    private:
         string word;
-        while(line>>word){
-            auto &lines = wm[word];
-            if(!lines)
-                lines.reset(new set<line_no>);
-            lines->insert(n);
+        shared_ptr<set<TextQuery::size_type>> LineNo;
+        StrBlob text;
+    
+    public:
+        QueryResult(const string &str, shared_ptr<set<TextQuery::size_type>> no, StrBlob input) : word(str), LineNo(no), text(input){}
+        ResultIter begin(){ return LineNo->begin();}
+        ResultIter end(){ return LineNo->end();}
+        shared_ptr<StrBlob> get_file(){ return make_shared<StrBlob>(text);}
+};
+
+TextQuery::TextQuery(ifstream& infile){
+    string line;
+    size_type count=0;
+    while(getline(infile, line)){
+        text.push_back(line);
+        istringstream is(line);
+        string str;
+        while(is>>str){
+            auto &t = mp[str];
+            if(!t)
+                t = make_shared<set<size_type>>();
+            mp[str]->insert(count);
         }
+        count++;
     }
 }
 
-QueryResult TextQuery::query(const string &sought) const{
-    static shared_ptr<set<line_no>> nodata(new set<line_no>);
-    auto loc = wm.find(sought);
-    if(loc==wm.end())
-        return QueryResult(sought, nodata, file);
-    else
-        return QueryResult(sought, loc->second, file);
+QueryResult TextQuery::query(const string& str)
+{
+    auto found = mp.find(str);
+    if (found == mp.end()) return QueryResult(str, make_shared<set<size_type>>(), text);
+    else return QueryResult(str, found->second, text);
 }
-#endif
+
+ostream& print(ostream& os, const QueryResult& q){
+        os<<q.word<<" occurs "<<q.LineNo->size()<<(q.LineNo->size()>1? " times":"time")<<endl;
+        for(auto i : *q.LineNo){
+            ConstStrBlobPtr p(q.text, i);
+            os<<"\t(line " << i+1 << ") "<<p.deref()<<endl;
+        }
+        return os;
+}
+
+void runQueries(ifstream &infile){
+    TextQuery tq(infile);
+    while(true){
+        cout<<"enter word to look for, or q to quit: ";
+        string s;
+        if(!(cin>>s) || s=="q") break;
+        print(cout, tq.query(s))<<endl;
+    }
+} 

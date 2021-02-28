@@ -4,7 +4,6 @@
 #include<iostream>
 #include<string>
 #include"TextQuery.h"
-#include"QueryResult.h"
 using namespace std;
 
 class Query_base{
@@ -13,7 +12,7 @@ protected:
     using line_no = TextQuery::line_no;
     virtual ~Query_base() = default;
 private:
-    //virtual QueryResult eval(const TextQuery&) const=0;
+    virtual QueryResult eval(const TextQuery&) const=0;
     virtual string rep() const = 0;
 };
 
