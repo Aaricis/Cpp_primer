@@ -10,4 +10,4 @@ C++ primer 中文版第五版习题答案
 
 # 参考资料
 - [书上的源代码](https://github.com/Aaricis/Cpp_primer/tree/master/VisualStudio2012)（来自书籍网站）
-- 课后习题参考书
+- [课后习题参考书](https://github.com/Aaricis/Cpp_primer/tree/master/c%2B%2B%20primer%E4%B9%A0%E9%A2%98%E9%9B%86%E7%AC%AC%E4%BA%94%E7%89%88)
