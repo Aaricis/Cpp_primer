@@ -9,5 +9,5 @@ C++ primer 中文版第五版习题答案
 - Visual Studio Code
 
 # 参考资料
-- 书上的源代码（来自书籍网站）
+- [书上的源代码](https://github.com/Aaricis/Cpp_primer/tree/master/VisualStudio2012)（来自书籍网站）
 - 课后习题参考书
