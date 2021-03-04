@@ -31,6 +31,8 @@ public:
     Blob();
     Blob(initializer_list<T> il);
 
+    template <typename It> Blob(It b, It e);
+
     size_type size() const {return data->size();}
     bool empty() const {return data->empty();}
 
@@ -55,6 +57,10 @@ Blob<T>::Blob():data(make_shared<vector<T>>()){}
 
 template <typename T>
 Blob<T>::Blob(initializer_list<T> il):data(il.begin(), il.end()){}
+
+template <typename T>
+template <typename It>
+Blob<T>::Blob(It b, It e):data(make_shared<vector<T>>(b,e)) {}
 
 template <typename T>
 void Blob<T>::check(size_type i, const string &msg) const{
