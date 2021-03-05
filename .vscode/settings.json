@@ -5,6 +5,7 @@
     "C_Cpp.dimInactiveRegions": false,
     "files.associations": {
         "sstream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "functional": "cpp"
     }
 }
