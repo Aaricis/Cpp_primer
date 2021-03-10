@@ -56,6 +56,8 @@ public:
 	void reserve(size_t);
 	void resize(size_t n, const T &t = T());
 
+	template <typename ... Args> void emplace_back(Args && ... args);
+
 private:
     static allocator<T> alloc;
 	void chk_n_alloc()
@@ -265,6 +267,15 @@ T& Vec<T>::operator[](size_t n){
 template <typename T>
 const T & Vec<T>::operator[](size_t n) const{
 	return elements[n];
+}
+
+
+template <typename T>
+template <typename ... Args>
+void Vec<T>::emplace_back(Args && ... args)
+{
+	chk_n_alloc();
+	alloc.construct(first_free++, std::forward<Args>(args)...);
 }
 
 #endif
