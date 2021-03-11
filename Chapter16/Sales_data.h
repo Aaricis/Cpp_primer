@@ -7,10 +7,16 @@ using namespace std;
 
 class Sales_data;
 istream& read(istream &is, Sales_data &sd);
+
 class Sales_data{
+friend class std::hash<Sales_data>;
 friend Sales_data add(const Sales_data &lhs, const Sales_data &rhs);
 friend istream &read(istream &is, Sales_data &sd);
 friend ostream &print(ostream &os, const Sales_data &sd);
+friend istream & operator>>(std::istream & is, Sales_data & sa); 
+friend ostream & operator<<(std::ostream & os, const Sales_data & sa);
+friend bool operator==(const Sales_data &lhs, const Sales_data &rhs);
+
 
 private:
     string bookNo = "";
@@ -30,6 +36,22 @@ public:
     Sales_data& combine(const Sales_data&);
     double avg_price() const;
 };
+namespace std
+{
+    template<>
+struct hash<Sales_data>{
+    typedef size_t result_type;
+    typedef Sales_data argument_type;
+    size_t operator() (const Sales_data& s) const;
+};
+
+size_t hash<Sales_data>::operator()(const Sales_data& s) const{
+    return hash<string>()(s.bookNo)^
+            hash<unsigned>()(s.units_sold)^
+            hash<double>()(s.revenue);
+
+}    
+} // namespace std
 
 
 
@@ -70,4 +92,28 @@ Sales_data add(const Sales_data &lhs, const Sales_data &rhs){
     sum.combine(rhs);
     return sum;
 }
+
+istream & operator>>(istream & is, Sales_data & sa)
+{
+	double price = 0;
+	is >> sa.bookNo >> sa.revenue >> price;
+	if(is)
+		sa.revenue = price * sa.units_sold;
+	else
+		sa = Sales_data();
+	return is;
+}
+
+ostream & operator<<(ostream & os, const Sales_data & sa)
+{
+	os << sa.isbn() << " " << sa.units_sold << " " << sa.revenue << " " << sa.avg_price();
+	return os;
+}
+
+bool operator==(const Sales_data &lhs, const Sales_data &rhs)
+{
+	return lhs.isbn() == rhs.isbn() && lhs.revenue == rhs.revenue && lhs.units_sold == rhs.units_sold;
+}
+
+
 #endif
